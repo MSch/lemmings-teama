@@ -115,7 +115,15 @@ defmodule Lemmings.Conversation do
         ]
       _ ->
         [
-          {:text, "nope"}
+          {:text, """
+          Das ist derzeit nicht der günstigste Deal. 
+          Du kannst den Tarifrechner auf post.at verwenden, um einen günstigeren Tarif zu finden!
+          https://post.at/energiekosten-rechner/
+          """},
+          {:typing, 2000},
+          {:text, """Wenn du mir sagst, wann deine Vertragsbindung bei deinem Stromanbieter endet (DD-MM-YY), 
+          kann ich dich rechtzeitig daran erinnern, Stromanbieter zu wechseln!
+          """}
         ]
     end
     {:ok, replies, %{state | s: :cheap_strom2, anbieter: anbieter}}
