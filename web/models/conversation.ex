@@ -72,8 +72,9 @@ defmodule Lemmings.Conversation do
   
   def handle_text_message("Energiespar-Tipp", _user_id, %{s: :said_hello} = state) do
     replies = [
+      {:text, "Hier noch ein Energiespar-Tipp:"},
       {:quick_replies, """
-      Hier noch ein Energiespar-Tipp: Elektrogeräte sind Stromfresser, auch wenn sie gar nicht gebraucht werden und damit schädlich fürs Klima. 
+      Elektrogeräte sind Stromfresser, auch wenn sie gar nicht gebraucht werden und damit schädlich fürs Klima. 
       Die Kosten für den Standby-Betrieb läppern sich im Jahr zu ordentlichen Beträgen. 
       Steck das Gerät aus oder verwende stattdessen schaltbare Steckdosen - das spart bis zu 70% Energie!
       """, ["Stromzähler prüfen", "Günstigerer Strom"]},
