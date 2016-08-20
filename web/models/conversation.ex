@@ -84,9 +84,16 @@ defmodule Lemmings.Conversation do
   end
 
   def handle_text_message(anbieter, _user_id, %{s: :cheap_strom} = state) do
-    replies = [
-      {:text, "Dein Anbieter: #{anbieter}"}
-    ]
+    replies = case anbieter do
+      "Wien Energie" ->
+        [
+          {:text, "Dein Anbieter ist der günstigste! Gratulation"}
+        ]
+      _ ->
+        [
+          {:text, "nope"}
+        ]
+    end
     {:ok, replies, %{state | s: :cheap_strom2, anbieter: anbieter}}
   end
   
