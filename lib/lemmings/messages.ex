@@ -72,6 +72,18 @@ defmodule Lemmings.Messages do
                 #   "recipient" => %{"id" => user_id},
                 #   "sender_action" => "typing_off",
                 # })
+              {:image, url} ->
+                send_fb(%{
+                  recipient: %{id: user_id},
+                  message: %{
+                    attachment: %{
+                      type: "image",
+                      payload: %{
+                        url: url
+                      }
+                    }
+                  }
+                })
               other ->
                 Logger.error "Invalid reply #{inspect reply}"
             end
