@@ -37,13 +37,14 @@ defmodule Lemmings.Messages do
 
       with \
         conv_state <- :erlang.binary_to_term(conversation.state),
-        {:ok, new_conv_state} <- Lemmings.Conversation.handle_message(message["message"], user_id, conv_state),
+        {:ok, replies, new_conv_state} <- Lemmings.Conversation.handle_message(message["message"], user_id, conv_state),
         conversation <- Lemmings.Conversation.changeset(conversation, %{state: :erlang.term_to_binary(new_conv_state)})
       do
         case conversation.data.__meta__.state do
           :built -> Logger.info "Started new conversation for user_id=#{user_id}: #{inspect new_conv_state}"
           :loaded -> Logger.info "Updated conversation for user_id=#{user_id}: #{inspect conv_state} -> #{inspect new_conv_state}"
         end
+        IO.inspect replies
         Lemmings.Repo.insert_or_update!(conversation)
       else
         {:error, reason} ->

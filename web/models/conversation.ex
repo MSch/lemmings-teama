@@ -24,18 +24,21 @@ defmodule Lemmings.Conversation do
 
   def handle_message(message, user_id, state) do
     %{"text" => text} = message
-    with {:ok, state} <- handle_text_message(text, user_id, state) do
-      {:ok, state}
+    with {:ok, replies, state} <- handle_text_message(text, user_id, state) do
+      {:ok, replies, state}
     else
       {:error, _reason} = e -> e
     end
   end
 
   def handle_text_message("reset", user_id, state) do
-    {:ok, new(user_id)}
+    handle_text_message("hi", user_id, new(user_id))
+  end
+  def handle_text_message("hi", _user_id, state) do
+    {:ok, {:text, "welcome"}, state}
   end
   def handle_text_message(text, _user_id, state) do
     state = %{state | history: [text | state.history]}
-    {:ok, state}
+    {:ok, [], state}
   end
 end
