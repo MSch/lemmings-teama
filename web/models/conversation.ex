@@ -20,7 +20,7 @@ defmodule Lemmings.Conversation do
   end
 
   def new(_user_id) do
-    %{said_hello: false, history: []}
+    %{s: :new, history: []}
   end
 
   def handle_message(message, user_id, state) do
@@ -35,15 +35,15 @@ defmodule Lemmings.Conversation do
   end
 
   def handle_text_message("reset", user_id, state) do
-    {:ok, {:text, "====== conversation state cleared ======"}, new(user_id)}
+    {:ok, {:text, "conversation state cleared"}, new(user_id)}
   end
-  def handle_text_message("hi", _user_id, %{said_hello: false} = state) do
+  def handle_text_message("hi", _user_id, %{s: :new} = state) do
     replies = [
       {:text, "welcome"},
       {:sleep, 500},
       {:text, "asds"},
     ]
-    {:ok, replies, %{state | said_hello: true}}
+    {:ok, replies, %{state | s: :said_hello}}
   end
   def handle_text_message(text, _user_id, state) do
     # state = %{state | history: [text | state.history]}
