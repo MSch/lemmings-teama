@@ -44,18 +44,44 @@ defmodule Lemmings.Conversation do
       Hallo! Ich bin der POSTROM Bot!
       Ich helfe dir, deinen Stromverbrauch unter Kontrolle zu halten und Geld damit zu sparen!
       Dazu kannst du auch tolle Ermäßigungen bei Post-Dienstleistungen bekommen.
-      Hast du deine Stromzähler seit langem nicht gesehen? Es ist mal wieder an der Zeit, ihn abzustauben!
-      """, ["Stromzähler prüfen", "Günstigeren finden"]},
+      Hast du deinen Stromzähler seit langem nicht gesehen? Es ist mal wieder an der Zeit, ihn abzustauben!
+      """, ["Stromzähler prüfen", "Günstigerer Strom", "Energiespar-Tipp"]},
     ]
     {:ok, replies, %{state | s: :said_hello}}
   end
   
-  def handle_text_message("A", _user_id, %{s: :said_hello} = state) do
+  def handle_text_message("Stromzähler prüfen", _user_id, %{s: :said_hello} = state) do
     replies = [
-      {:text, "you choose A"},
+      {:text, """
+      Bitte lies deinen Strom-Zählerstand ab, damit du in einem Monat sehen kannst wie viel du verbraucht hast. 
+      Bitte schreib mir den Zahl vom Stromzähler.
+      """},
     ]
-    {:ok, replies, %{state | s: :choose_a }}
+    {:ok, replies, %{state | s: :meter_check}}
   end
+  
+  def handle_text_message("Günstigerer Strom", _user_id, %{s: :said_hello} = state) do
+    replies = [
+      {:text, """
+      Bitte sag mir, bei welchem Stromanbieter du gerade Strom beziehst! 
+      (Tipp: Du kannst die Info auf deiner Stromrechnung finden!)
+      """},
+    ]
+    {:ok, replies, %{state | s: :cheap_strom}}
+  end
+  
+  def handle_text_message("Energiespar-Tipp", _user_id, %{s: :said_hello} = state) do
+    replies = [
+      {:quick_replies, """
+      Hier noch ein Energiespar-Tipp: Elektrogeräte sind Stromfresser, auch wenn sie gar nicht gebraucht werden und damit schädlich fürs Klima. 
+      Die Kosten für den Standby-Betrieb läppern sich im Jahr zu ordentlichen Beträgen. 
+      Steck das Gerät aus oder verwende stattdessen schaltbare Steckdosen - das spart bis zu 70% Energie!
+      """, ["Stromzähler prüfen", "Günstigerer Strom"]},
+    ]
+    {:ok, replies, %{state | s: :said_hello}}
+  end
+  
+  
   
   def handle_text_message("hi", _user_id, %{s: :new} = state) do
     replies = [
