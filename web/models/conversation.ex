@@ -1,5 +1,6 @@
 defmodule Lemmings.Conversation do
   use Lemmings.Web, :model
+  require Logger
 
   @primary_key {:user_id, :binary, autogenerate: false}
 
@@ -19,26 +20,33 @@ defmodule Lemmings.Conversation do
   end
 
   def new(_user_id) do
-    %{history: []}
+    %{said_hello: false, history: []}
   end
 
   def handle_message(message, user_id, state) do
-    %{"text" => text} = message
-    with {:ok, replies, state} <- handle_text_message(text, user_id, state) do
-      {:ok, replies, state}
-    else
-      {:error, _reason} = e -> e
+    case message do
+      %{"message" => %{"text" => text}} -> handle_text_message(text, user_id, state)
+      %{"read" => _} -> {:ok, [], state}
+      %{"delivery" => _} -> {:ok, [], state}
+      other ->
+        Logger.error "Unhandled message: #{inspect other}"
+        {:error, :unhandled}
     end
   end
 
   def handle_text_message("reset", user_id, state) do
-    handle_text_message("hi", user_id, new(user_id))
+    {:ok, {:text, "====== conversation state cleared ======"}, new(user_id)}
   end
-  def handle_text_message("hi", _user_id, state) do
-    {:ok, {:text, "welcome"}, state}
+  def handle_text_message("hi", _user_id, %{said_hello: false} = state) do
+    replies = [
+      {:text, "welcome"},
+      {:sleep, 500},
+      {:text, "asds"},
+    ]
+    {:ok, replies, %{state | said_hello: true}}
   end
   def handle_text_message(text, _user_id, state) do
-    state = %{state | history: [text | state.history]}
+    # state = %{state | history: [text | state.history]}
     {:ok, [], state}
   end
 end
