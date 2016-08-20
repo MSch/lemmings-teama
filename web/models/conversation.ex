@@ -39,12 +39,55 @@ defmodule Lemmings.Conversation do
   end
   def handle_text_message("hi", _user_id, %{s: :new} = state) do
     replies = [
+    {:typing, 2000}
+      {:text, "Hallo! Ich bin der POSTROM Bot!
+      Ich helfe dir, deinen Stromverbrauch unter Kontrolle zu halten und Geld damit zu sparen!
+      Dazu kannst du auch tolle Ermäßigungen bei Post-Dienstleistungen bekommen.
+      Hast du deine Stromzähler seit langem nicht gesehen? Es ist mal wieder an der Zeit, ihn abzustauben!"},
+    ]
+    {:ok, replies, %{state | s: :said_hello}}
+  end
+  
+  def handle_text_message("hi", _user_id, %{s: :said_hello} = state) do
+    replies = [
       {:text, "welcome"},
       {:typing, 2000},
       {:text, "asds"},
     ]
     {:ok, replies, %{state | s: :said_hello}}
   end
+  
+  def handle_text_message("hi", _user_id, %{s: :new} = state) do
+    replies = [
+      {:text, "welcome"},
+      {:typing, 2000},
+      {:text, "asds"},
+    ]
+    {:ok, replies, %{state | s: :said_hello}}
+  end
+  
+  def handle_text_message("hi", _user_id, %{s: :new} = state) do
+    replies = [
+      {:text, "welcome"},
+      {:typing, 2000},
+      {:text, "asds"},
+    ]
+    {:ok, replies, %{state | s: :said_hello}}
+  end
+  
+  def handle_text_message("hi", _user_id, %{s: :new} = state) do
+    replies = [
+      {:text, "welcome"},
+      {:typing, 2000},
+      {:text, "asds"},
+    ]
+    {:ok, replies, %{state | s: :said_hello}}
+  end
+  
+  
+  
+  
+  
   def handle_text_message(text, _user_id, state) do
     # state = %{state | history: [text | state.history]}
     {:ok, [], state}
