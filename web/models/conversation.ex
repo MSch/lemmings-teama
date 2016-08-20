@@ -20,7 +20,7 @@ defmodule Lemmings.Conversation do
   end
 
   def new(_user_id) do
-    %{s: :new, history: []}
+    %{s: :new, history: [], anbieter: nil}
   end
 
   def handle_message(message, user_id, state) do
@@ -81,6 +81,13 @@ defmodule Lemmings.Conversation do
       """, ["Stromzähler prüfen", "Günstigerer Strom"]},
     ]
     {:ok, replies, %{state | s: :said_hello}}
+  end
+
+  def handle_text_message(anbieter, _user_id, %{s: :cheap_strom} = state) do
+    replies = [
+      {:text, "Dein Anbieter: #{anbieter}"}
+    ]
+    {:ok, replies, %{state | s: :cheap_strom2, anbieter: anbieter}}
   end
   
   
