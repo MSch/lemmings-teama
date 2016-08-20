@@ -103,6 +103,31 @@ defmodule Lemmings.Messages do
                     end)
                   }
                 })
+              {:buttons, text, buttons} ->
+                send_fb(%{
+                  recipient: %{id: user_id},
+                  message: %{
+                    attachment: %{
+                      type: "template",
+                      payload: %{
+                        template_type: "button",
+                        text: text,
+                        buttons: Enum.map(buttons, fn
+                          {title, payload} -> %{
+                              type: "postback",
+                              title: title,
+                              payload: payload
+                            }
+                          title -> %{
+                              type: "postback",
+                              title: title,
+                              payload: title
+                            }
+                        end)
+                      }
+                    }
+                  }
+                })
               other ->
                 Logger.error "Invalid reply #{inspect reply}"
             end

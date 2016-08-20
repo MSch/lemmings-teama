@@ -26,6 +26,7 @@ defmodule Lemmings.Conversation do
   def handle_message(message, user_id, state) do
     case message do
       %{"message" => %{"text" => text}} -> handle_text_message(text, user_id, state)
+      %{"postback" => %{"payload" => payload}} -> handle_text_message(payload, user_id, state)
       %{"read" => _} -> {:ok, [], state}
       %{"delivery" => _} -> {:ok, [], state}
       other ->
@@ -40,7 +41,7 @@ defmodule Lemmings.Conversation do
   def handle_text_message("hi", _user_id, %{s: :new} = state) do
     replies = [
       {:typing, 2000},
-      {:quick_replies, """
+      {:buttons, """
       Hallo! Ich bin der POSTROM Bot!
       Ich helfe dir, deinen Stromverbrauch unter Kontrolle zu halten und Geld damit zu sparen!
       Dazu kannst du auch tolle Ermäßigungen bei Post-Dienstleistungen bekommen.
@@ -73,7 +74,7 @@ defmodule Lemmings.Conversation do
   def handle_text_message("Energiespar-Tipp", _user_id, %{s: :said_hello} = state) do
     replies = [
       {:text, "Hier noch ein Energiespar-Tipp:"},
-      {:quick_replies, """
+      {:buttons, """
       Elektrogeräte sind Stromfresser, auch wenn sie gar nicht gebraucht werden und damit schädlich fürs Klima. 
       Die Kosten für den Standby-Betrieb läppern sich im Jahr zu ordentlichen Beträgen. 
       Steck das Gerät aus oder verwende stattdessen schaltbare Steckdosen - das spart bis zu 70% Energie!
