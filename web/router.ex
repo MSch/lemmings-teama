@@ -11,6 +11,7 @@ defmodule Lemmings.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
   end
 
   scope "/", Lemmings do
@@ -19,8 +20,9 @@ defmodule Lemmings.Router do
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Lemmings do
-  #   pipe_through :api
-  # end
+  scope "/api", Lemmings do
+    pipe_through :api
+    get "/fb-webhook", FbController, :verify
+    post "/fb-webhook", FbController, :webhook
+  end
 end

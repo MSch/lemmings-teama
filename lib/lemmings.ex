@@ -10,6 +10,7 @@ defmodule Lemmings do
     children = [
       # Start the Ecto repository
       supervisor(Lemmings.Repo, []),
+      worker(Lemmings.Messages, []),
       # Start the endpoint when the application starts
       supervisor(Lemmings.Endpoint, []),
       # Start your own worker by calling: Lemmings.Worker.start_link(arg1, arg2, arg3)
