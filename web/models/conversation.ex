@@ -20,7 +20,7 @@ defmodule Lemmings.Conversation do
   end
 
   def new(_user_id) do
-    %{s: :new, history: [], anbieter: nil}
+    %{s: :new, history: [], anbieter: nil, meter_levels: []}
   end
 
   def handle_message(message, user_id, state) do
@@ -59,6 +59,30 @@ defmodule Lemmings.Conversation do
       """},
     ]
     {:ok, replies, %{state | s: :meter_check}}
+  end
+
+  def handle_text_message(input, _user_id, %{s: :meter_check} = state) do
+    error_replies = [
+      {:text, "nope. try again"}
+    ]
+    case Integer.parse(input) do
+      {meter_level, rest} ->
+        cond do
+          meter_level < 1000 ->
+            {:ok, error_replies, state}
+          meter_level > 10000000 ->
+            {:ok, error_replies, state}
+          not String.downcase(rest) in ["", " kw", " kwh", " kw/h", " kilowatt", " kilowattstunden"] ->
+            {:ok, error_replies, state}
+          true ->
+            replies = [
+              {:text, "#{meter_level} Kilowatt. Super!"}
+            ]
+            {:ok, replies, %{state | s: :meter_level_given, meter_levels: [meter_level | state.meter_levels]}}
+        end
+      :error ->
+        {:ok, error_replies, state}
+    end
   end
   
   def handle_text_message("Günstigerer Strom", _user_id, %{s: :said_hello} = state) do
