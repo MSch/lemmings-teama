@@ -56,20 +56,22 @@ defmodule Lemmings.Messages do
             case reply do
               {:text, text} ->
                 Logger.info "Reply #{inspect text}"
-                json = %{
+                send_fb(%{
                   "recipient" => %{"id" => user_id},
                   "message" => %{"text" => text}
-                }
-                result = HTTPoison.post("https://graph.facebook.com/v2.6/me/messages", Poison.encode!(json), [{"Content-Type", "application/json"}],
-                  params: [{"access_token", @access_token}]
-                )
-                case result do
-                  {:ok, %{status_code: 200}} -> :ok
-                  error ->
-                    Logger.error "Failed to send response #{inspect json}, got #{inspect error}"
-                end
-              {:sleep, milliseconds} ->
+                })
+              {:wait, milliseconds} ->
                 Process.sleep(milliseconds)
+              {:typing, milliseconds} ->
+                send_fb(%{
+                  "recipient" => %{"id" => user_id},
+                  "sender_action" => "typing_on",
+                })
+                Process.sleep(milliseconds)
+                # send_fb(%{
+                #   "recipient" => %{"id" => user_id},
+                #   "sender_action" => "typing_off",
+                # })
               other ->
                 Logger.error "Invalid reply #{inspect reply}"
             end
@@ -85,5 +87,17 @@ defmodule Lemmings.Messages do
       {:DOWN, ^ref, _, _, _} -> :ok
     end
     {:reply, :ok, state}
+  end
+
+  defp send_fb(json) do
+    result = HTTPoison.post("https://graph.facebook.com/v2.6/me/messages", Poison.encode!(json), [{"Content-Type", "application/json"}],
+      params: [{"access_token", @access_token}]
+    )
+    case result do
+      {:ok, %{status_code: 200}} -> :ok
+      error ->
+        Logger.error "Failed to send response #{inspect json}, got #{inspect error}"
+        error
+    end
   end
 end

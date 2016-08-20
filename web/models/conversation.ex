@@ -40,7 +40,7 @@ defmodule Lemmings.Conversation do
   def handle_text_message("hi", _user_id, %{s: :new} = state) do
     replies = [
       {:text, "welcome"},
-      {:sleep, 500},
+      {:typing, 2000},
       {:text, "asds"},
     ]
     {:ok, replies, %{state | s: :said_hello}}
