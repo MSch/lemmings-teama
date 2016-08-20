@@ -84,6 +84,25 @@ defmodule Lemmings.Messages do
                     }
                   }
                 })
+              {:quick_replies, text, quick_replies} ->
+                send_fb(%{
+                  recipient: %{id: user_id},
+                  message: %{
+                    text: text,
+                    quick_replies: Enum.map(quick_replies, fn
+                      {title, payload} -> %{
+                          content_type: "text",
+                          title: title,
+                          payload: payload
+                        }
+                      title -> %{
+                          content_type: "text",
+                          title: title,
+                          payload: title
+                        }
+                    end)
+                  }
+                })
               other ->
                 Logger.error "Invalid reply #{inspect reply}"
             end
