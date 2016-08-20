@@ -121,7 +121,8 @@ defmodule Lemmings.Conversation do
           https://post.at/energiekosten-rechner/
           """},
           {:typing, 2000},
-          {:text, """Wenn du mir sagst, wann deine Vertragsbindung bei deinem Stromanbieter endet (DD-MM-YY), 
+          {:text, """
+          Wenn du mir sagst, wann deine Vertragsbindung bei deinem Stromanbieter endet (DD-MM-YY), 
           kann ich dich rechtzeitig daran erinnern, Stromanbieter zu wechseln!
           """}
         ]
